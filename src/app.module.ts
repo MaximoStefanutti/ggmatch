@@ -4,6 +4,8 @@ import { UsersModule } from './users/users.module';
 import { GamesModule } from './games/games.module';
 import { AuthModule } from './auth/auth.module';
 import { CofigModule } from './cofig/cofig.module';
+import { RolesModule } from './roles/roles.module';
+import { RankModule } from './rank/rank.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ChatModule } from './chat/chat.module';
 import { PaymanModule } from './payman/payman.module';
@@ -12,7 +14,7 @@ import { AdminModule } from './admin/admin.module';
 import { CofigModule } from './cofig/cofig.module';
 
 @Module({
-  imports: [UserModule, UsersModule, GamesModule, AuthModule, CofigModule, AdminModule, SubscriptionModule, PaymanModule, ChatModule, NotificationsModule],
+  imports: [UserModule, UsersModule, GamesModule, AuthModule, CofigModule, AdminModule, SubscriptionModule, PaymanModule, ChatModule, NotificationsModule, RankModule, RolesModule],
   controllers: [],
   providers: [],
 })
