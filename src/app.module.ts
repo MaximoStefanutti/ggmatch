@@ -1,20 +1,33 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PostgresConfig } from './config/data.source';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSourceOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
-import { GamesModule } from './games/games.module';
 import { AuthModule } from './auth/auth.module';
-import { CofigModule } from './cofig/cofig.module';
-import { RolesModule } from './roles/roles.module';
-import { RankModule } from './rank/rank.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { ChatModule } from './chat/chat.module';
-import { PaymanModule } from './payman/payman.module';
-import { SubscriptionModule } from './subscription/subscription.module';
-import { AdminModule } from './admin/admin.module';
-import { CofigModule } from './cofig/cofig.module';
 
 @Module({
-  imports: [UserModule, UsersModule, GamesModule, AuthModule, CofigModule, AdminModule, SubscriptionModule, PaymanModule, ChatModule, NotificationsModule, RankModule, RolesModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+      load: [PostgresConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const options = configService.get<DataSourceOptions>('postgres');
+        if (!options) {
+          throw new Error(
+            'Postgres configuration not found in environment variables.',
+          );
+        }
+        return options;
+      },
+    }),
+    UsersModule,
+    AuthModule,
+  ],
   controllers: [],
   providers: [],
 })

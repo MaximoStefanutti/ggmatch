@@ -36,6 +36,12 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
   @ManyToMany(() => Game, (game) => game.players)
   @JoinTable()
   games: Game[];

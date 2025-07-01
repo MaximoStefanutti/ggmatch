@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { ApiOperation } from '@nestjs/swagger';
+import { SigninDTO } from './dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @ApiOperation({
+    summary: 'Registro de usuario',
+    description: 'Registra un nuevo usuario en la base de datos',
+  })
+  @Post('signup')
+  async signup(@Body() data: CreateAuthDto) {
+    return this.authService.signupService(data);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @ApiOperation({
+    summary: 'Inicio de sesión',
+    description: 'Inicia sesión con un usuario existente',
+  })
+  @Post('login')
+  async login(
+    @Body() data: SigninDTO,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.loginWithCookie(data, res);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @ApiOperation({
+    summary: 'Desconexión de sesión',
+    description: 'Cierra la sesión del usuario',
+  })
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logoutService(res);
   }
 }
