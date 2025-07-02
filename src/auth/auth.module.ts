@@ -5,13 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
-import { contanst } from './jwt.contanst';
+import { constanst } from './jwt.constanst';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: contanst.secret,
+      secret: constanst.secret,
       signOptions: { expiresIn: '24h' },
     }),
     UsersModule,
